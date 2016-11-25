@@ -6,7 +6,7 @@
 <body ng-app="ExampleApp" ng-cloak>
 	<div ng-controller="pageCtrl">
 		<md-list>
-			<md-list-item ng-repeat="order in orders">
+			<md-list-item ng-repeat="order in orders track by $index">
 				<p> {{ order }} </p>
 				<md-checkbox class="md-secondary"></md-checkbox>
 			</md-list-item>
@@ -55,7 +55,7 @@
 				 * Rest interface documentation for mongodb: https://docs.mongodb.com/ecosystem/tools/http-interfaces/#simple-rest-api
 				 * Remember --rest command line switch!
 				 */
-				$http.get(window.location.href+'ordersDB/orders/?filter_ordered=1').then(function(response) {
+				$http.get(window.location.href+'ordersDB/orders/?filter_ordered=true').then(function(response) {
 					// Get data
 					content = angular.fromJson(response.data);
 
