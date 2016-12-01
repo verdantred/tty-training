@@ -1,0 +1,11 @@
+Palpo REST API mashup project work
+
+5min välein:
+	hae twitteristä 10 suosituinta hashtagia
+	pullaa kannasta kaikki tagit
+	jaa tagit uusiin ja vanhoihin
+	laske tageille velocity
+	update vanhat tagit
+	onko uusia tageja:
+		jos on hae googlesta reverse geocode maa tagille
+		työnnä uusi tagi kantaan
