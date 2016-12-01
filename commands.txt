@@ -13,6 +13,6 @@ Swarm:
 sudo docker swarm init --advertise-addr 35.156.146.249
 
 sudo docker service create --replicas 1 --name mongo -p 91:27017 -p 92:28017 mongo:3 mongod --rest
-sudo ddocker service create --replicas 1 --name stash -p 2000:2000 verdant/tty-logstash
+sudo docker service create --replicas 1 --name stash -p 2000:2000 verdant/tty-logstash
 sudo docker service create --replicas 1 --name front -p 8080:80 verdant/tty-frontend
 sudo docker service create --replicas 1 --name haproxy -p 80:8001 verdant/tty-haproxy
