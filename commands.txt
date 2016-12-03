@@ -21,7 +21,7 @@ sudo docker service create --replicas 1 --name haproxy -p 80:8001 verdant/tty-ha
 sudo docker service create --replicas 1 --name rabbitmq rabbitmq:3
 sudo docker service create --replicas 1 --name rabbitmq rabbitmq:3-management
 
-docker run -d --name mongo -p 91:27017 -p 92:28017 -p 93:27017 mongo:3 mongod --rest
+docker run -d --name mongo -p 92:28017 -p 93:27017 mongo:3 mongod --rest
 docker run -d --name stash -p 2000:2000 verdant/logstash-h2r
 docker run -d --name stash1 verdant/logstash-r2m
 docker run -d --name front -p 8080:80 verdant/front-p2
