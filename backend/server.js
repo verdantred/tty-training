@@ -1,24 +1,16 @@
 'use strict';
 
-const express = require('express');
 const mongoose = require('mongoose');
 
 var videoSchema = new mongoose.Schema({
     url: String,
-	likes: Integer
+	likes: Integer,
+	tweet_count: Integer
 });
 var Video = mongoose.model('Video', videoSchema);
-var test = new Video({ url: 'youtube.com/watch?v_test', likes: 1 });
 
 // Constants
 const PORT = 8082;
-
-function myfind (con, collec, query, callback) {
-    con.db.collection(collec, function (err, collection) {
-		if(err) res.status(501).send('Collection not found: ' + err);
-		collection.find(query).toArray(callback);
-    });
-}
 
 // App
 const app = express();
@@ -27,44 +19,23 @@ app.get('/', function (req, res) {
 	var dbUrl = 'mongodb://172.17.0.1:93/tweets';
 	mongoose.connect(dbUrl);
 	var con = mongoose.connection;
-	
 	con.on('error', function(err){
 		console.log('No connection to database: ' + err);
 	});
-	con.once('open', function() {
+	con.on('open', function() {
 		console.log('We are connected!');
-		
-		myfind(con, 'messages', {}, function(err, entries){
-			if (err) res.status(501).send('Databse query error: ' + err);
-			console.log("Found raw entries: " + entries);
-			data.raws = entries;
-			Video.findOne({url: 'youtube.com/watch?v_test'}, function(err, vid){
-				if (err) res.status(501).send('Databse query error: ' + err);
-				if(vid == null){
-					console.log("No test vid found: " + vid);
-					test.save(function(err, test){
-						if (err) res.status(502).send('Databse insert error: ' + err + ' ' + test);
-					});
-				}
-				else {
-					console.log('Test tag is already in the database');
-				}
-				Video.find(function (err, vids) {
-					if (err) res.status(501).send('Databse query error: ' + err);
-					console.log("Found videos: " + vids);
-					data.vids = vids;
-					mongoose.disconnect();
-					res.send(data);
-				});
-			});
-			
+		Video.find({}).limit(10).sort({tweet_count: -1}).exec(function(err, results){
+			if (err) console.log('Databse query error: ' + err);
+			console.log("Found videos: " + results);
+			mongoose.disconnect();
+			res.send(results);
 		});
-	
 	});
 	
 });
 
 app.get('/close/', function (req, res) {
+	stop = true;
 	mongoose.disconnect();
 	res.send('ok');
 });

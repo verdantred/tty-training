@@ -55,7 +55,7 @@
 				 * Rest interface documentation for mongodb: https://docs.mongodb.com/ecosystem/tools/http-interfaces/#simple-rest-api
 				 * Remember --rest command line switch!
 				 */
-				$http.get(window.location.href+'ordersDB/orders/?filter_ordered=true').then(function(response) {
+				$http.get(window.location.href+'tweets/').then(function(response) {
 					// Get data
 					content = angular.fromJson(response.data);
 
