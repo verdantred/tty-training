@@ -1,12 +1,11 @@
 'use strict';
 
-const express = require('express');
 const mongoose = require('mongoose');
 
 var videoSchema = new mongoose.Schema({
     url: String,
-	likes: Integer,
-	tweet_count: Integer
+	likes: Number,
+	tweet_count: Number
 });
 var Video = mongoose.model('Video', videoSchema);
 
@@ -58,7 +57,7 @@ function doStuff() {
 };
 
 function run() {
-  setInterval(doStuff, 1000);
+  setInterval(doStuff, 3000);
 };
 
 console.log('Running refiner!');

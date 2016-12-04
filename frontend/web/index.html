@@ -51,19 +51,16 @@
 			}
 
 			$scope.fetchItems = function () {
-				/*
-				 * Rest interface documentation for mongodb: https://docs.mongodb.com/ecosystem/tools/http-interfaces/#simple-rest-api
-				 * Remember --rest command line switch!
-				 */
 				$http.get(window.location.href+'tweets/').then(function(response) {
 					// Get data
-					content = angular.fromJson(response.data);
+					content = angular.fromJson(response.data).results;
 
 					// Prepare array for switch to avoid multiple angular digests
 					var newRows = [];
 
 					// Push content
-					content.rows.forEach(function(row) {
+					
+					content.forEach(function(row) {
 						newRows.push(row.name);
 					});
 
