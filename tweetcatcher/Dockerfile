@@ -1,16 +1,8 @@
-FROM node:latest
+FROM nodesource/node:5.1.0
 
-# Create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-
-# Install app dependencies
-COPY package.json /usr/src/app/
+ADD package.json package.json
 RUN npm install
+ADD . .
 
-# Bundle app source
-COPY . /usr/src/app
-
-EXPOSE 8083
 
 CMD [ "npm", "start" ]
