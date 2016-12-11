@@ -1,4 +1,4 @@
-# Docker Swarm Training
+# API Mashup Exercise
 Implemented for course Palvelupohjaiset järjestelmät (Service oriented systems) at Tampere University of Technology in the second period of semester 2016/2017.
 
 The service can be found in http://35.156.146.249/ or http://35.156.150.190/
