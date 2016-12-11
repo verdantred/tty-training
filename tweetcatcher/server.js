@@ -7,10 +7,6 @@ var streamError = require('./streams/error');
 var streamParameters = {
   track: "youtube"
 };
-console.log(process.env.consumer_key);
-console.log(process.env.consumer_secret);
-console.log(process.env.access_token_key);
-console.log(process.env.access_token_secret);
 
 var client = new Twitter({
   consumer_key: process.env.consumer_key,

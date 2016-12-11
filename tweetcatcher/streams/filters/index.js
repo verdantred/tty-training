@@ -1,6 +1,6 @@
 var chalk = require('chalk');
 var request = require('request');
-var re = /(youtube.com\/watch?.*)/i;
+var re = /youtube\.com\/watch\?v=([A-Za-z0-9_-]+)/i;
 
 console.log("Hey, it's a me streamer!");
 
@@ -18,8 +18,8 @@ var streamFilter = function(tweet) {
 			matches = tweet.entities.urls[0].expanded_url.match(re);
 		}
 		if(matches && matches.length > 0 && tweet.retweeted_status){
-			console.log(chalk.green(tweet.text, ' : ', matches[0], ' : ', tweet.retweeted_status.retweet_count + 1));
-			options.json = {message: tweet.text, url: matches[0], tweet_count: tweet.retweet_count + 1};
+			console.log(chalk.green(tweet.text, ' : ', matches[0], ' : ', matches[1], ' : ', tweet.retweeted_status.retweet_count + 1));
+			options.json = {message: tweet.text, url: matches[0], vid: matches[1], tweet_count: tweet.retweeted_status.retweet_count + 1, processed: false};
 			request.post(options, function (error, response, body) {
 				if(error) console.log(body + " " + error);
 				if (!error && response.statusCode == 200) {

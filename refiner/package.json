@@ -3,11 +3,17 @@
   "version": "1.0.0",
   "description": "Node.js on Docker",
   "author": "Ville Niittunen <ville.niittunen@student.tut.fi>",
-  "main": "server.js",
+  "main": "server1.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server1.js"
   },
   "dependencies": {
-	"mongoose": "^4.6.0"
+    "async": "^2.1.4",
+    "async-polling": "^0.2.1",
+    "bluebird": "^3.4.6",
+    "dotenv": "^2.0.0",
+    "mongoose": "^4.6.0",
+    "request": "^2.79.0",
+    "youtube-api": "^2.0.4"
   }
 }

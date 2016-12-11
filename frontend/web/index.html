@@ -51,7 +51,7 @@
 			}
 
 			$scope.fetchItems = function () {
-				$http.get(window.location.href+'tweets/').then(function(response) {
+				$http.get(window.location.href+'tweets/videos/').then(function(response) {
 					// Get data
 					content = angular.fromJson(response.data).results;
 
@@ -61,7 +61,7 @@
 					// Push content
 					
 					content.forEach(function(row) {
-						newRows.push(row.name);
+						newRows.push(row.url);
 					});
 
 					// Swap content
