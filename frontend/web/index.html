@@ -7,8 +7,10 @@
 	<div ng-controller="pageCtrl">
 		<md-list>
 			<md-list-item ng-repeat="order in orders track by $index">
-				<p> {{ order }} </p>
-				<md-checkbox class="md-secondary"></md-checkbox>
+				<a ng-href={{order.url}}> <h3>{{ order.title }} </h3></a>
+				<p>Likes: {{order.likes}} Like-%: {{order.likeRate}}</p>
+				
+				<p>{{order.message}}</p>
 			</md-list-item>
 		</md-list>
 
@@ -37,7 +39,7 @@
 			/*
 			 * Modifications of this list will automatically update on the page
 			 */
-			$scope.orders = ["Bluetooth Headphones", "Christmas Gift"];
+			$scope.orders = [];
 
 			/*
 			 * Documentation https://docs.angularjs.org/api/ng/service/$http
@@ -51,7 +53,7 @@
 			}
 
 			$scope.fetchItems = function () {
-				$http.get(window.location.href+'tweets/videos/').then(function(response) {
+				$http.get(window.location.href+'tweets/').then(function(response) {
 					// Get data
 					content = angular.fromJson(response.data).results;
 
@@ -61,7 +63,8 @@
 					// Push content
 					
 					content.forEach(function(row) {
-						newRows.push(row.url);
+						row.url = "https://www." + row.url;
+						newRows.push(row);
 					});
 
 					// Swap content

@@ -6,20 +6,23 @@ var async = require('async');
 require('dotenv').load();
 var request = require('request');
 
-const ytUrl = "https://www.googleapis.com/youtube/v3/videos?part=statistics&key=" + process.env.api_key + "&id=";
+const ytUrl = "https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&key=" + process.env.api_key + "&id=";
 
 // Use bluebird promises
 mongoose.Promise = require('bluebird');
 
 var videoSchema = new mongoose.Schema({
+	title: {type: String, default: null},
+	message: String,
     url: String,
 	vid: String,
 	likes: {type: Number, default: null},
+	likeRate: {type: Number, default: null},
 	tweet_count: {type: Number, default: 0}
 });
 var Video = mongoose.model('Video', videoSchema);
 
-var polling = AsyncPolling(pollerFunction, 3000);
+var polling = AsyncPolling(pollerFunction, 4000);
 
 console.log('Running refiner!');
 var dbUrl = 'mongodb://172.17.0.1:93/tweets';
@@ -31,7 +34,7 @@ con.on('error', function(err){
 });
 con.once('open', function() {
 	console.log('We are connected!');
-	mongoose.model('Message', new mongoose.Schema({ message: String, url: String, vid: String, tweet_count: Number, processed: Boolean}), 'messages');
+	mongoose.model('Message', new mongoose.Schema({ message: String, retweet: String, url: String, vid: String, tweet_count: Number, processed: Boolean}), 'messages');
 	polling.run(); // Let's start polling.
 });
 
@@ -48,13 +51,12 @@ function pollerFunction(end) {
 		async.forEach(entries, 
 			//2nd parameter is the function that processes each item
 			function(element, callback){
-				console.log("Processing element: " + element);
 				var promise = Video.findOneAndUpdate({url: element.url}, { $inc: { tweet_count: 1 }}).exec();
 				promise.then(function(vid){
 					var waitFor;
 					if(!vid){
 						console.log("Didn't find the video, inserting it..");
-						waitFor = new Video({url: element.url, vid: element.vid, tweet_count: element.tweet_count}).save(function(err, vid){
+						waitFor = new Video({url: element.url, message: element.retweet, vid: element.vid, tweet_count: element.tweet_count}).save(function(err, vid){
 						});
 					}
 					else{
@@ -110,11 +112,27 @@ function pollerFunction(end) {
 								end(err);
 								return;
 							}
-							console.log("Body of the response got!");
-							if(body && body.items > 0){
-								async.forEach(body.items,
+							var parsed = JSON.parse(body)
+							console.log("Body of the Youtube API response got!");
+							if(parsed && parsed.items){
+								async.forEach(parsed.items,
 									function(res, cb){
-										dict[res.id].likes = res.statistics.likeCount;
+										var likes, dislikes;
+										if(!res.statistics.likeCount){
+											likes = 0;
+										}
+										else{
+											likes = parseInt(res.statistics.likeCount);
+										}
+										if(!res.statistics.dislikeCount){
+											dislikes = 0;
+										}
+										else{
+											dislikes = parseInt(res.statistics.dislikeCount);
+										}
+										dict[res.id].likeRate =  likes != 0 || dislikes != 0 ? (likes - dislikes) * 10 / ((likes + dislikes)) : 0;
+										dict[res.id].likes =  likes - dislikes;
+										dict[res.id].title = res.snippet.title;
 										cb();
 									},
 									function(error){
@@ -129,13 +147,24 @@ function pollerFunction(end) {
 											}
 											console.log("Fetched like counts to the videos! Count: ", saved.length)
 											if(results.length > 500){
-												Video.find({}).sort({tweet_count: 1}).limit(results.length - 500).remove().exec(function(err, rems){
+												Video.find({}).sort({tweet_count: 1}).limit(results.length - 500).exec(function(err, rems){
 													if (err) {
 														end(err);
 														return;
 													}
-													console.log("Removed " + rems.length + " not-liked items.")
-													end(null, results);
+													var ids = [];
+													for(var l = 0; l < rems.length; l++){
+														ids.push(rems[l].url);
+													}
+													Video.find({url: {$in: ids}}).remove().exec(function(errr, removed){
+														if (err) {
+															end(err);
+															return;
+														}
+														console.log("Removed " + removed + " not-liked items.")
+														end(null, results);
+													});
+													
 												});
 											}
 											else {

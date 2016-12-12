@@ -19,7 +19,7 @@ var streamFilter = function(tweet) {
 		}
 		if(matches && matches.length > 0 && tweet.retweeted_status){
 			console.log(chalk.green(tweet.text, ' : ', matches[0], ' : ', matches[1], ' : ', tweet.retweeted_status.retweet_count + 1));
-			options.json = {message: tweet.text, url: matches[0], vid: matches[1], tweet_count: tweet.retweeted_status.retweet_count + 1, processed: false};
+			options.json = {message: tweet.text, retweet: tweet.retweeted_status.text, url: matches[0], vid: matches[1], tweet_count: tweet.retweeted_status.retweet_count + 1, processed: false};
 			request.post(options, function (error, response, body) {
 				if(error) console.log(body + " " + error);
 				if (!error && response.statusCode == 200) {
