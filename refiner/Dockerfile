@@ -11,6 +11,8 @@ RUN npm install
 # Bundle app source
 COPY . /usr/src/app
 
+COPY /home/ec2-user/ytenv/.env /usr/src/app/.env
+
 EXPOSE 8083
 
 CMD [ "npm", "start" ]
