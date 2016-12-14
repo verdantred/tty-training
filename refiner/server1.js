@@ -6,7 +6,7 @@ var async = require('async');
 require('dotenv').load();
 var request = require('request');
 
-const ytUrl = "https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&key=" + api_key + "&id=";
+const ytUrl = "https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&key=" + process.env.api_key + "&id=";
 
 // Use bluebird promises
 mongoose.Promise = require('bluebird');
