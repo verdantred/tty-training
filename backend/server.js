@@ -34,7 +34,7 @@ app.post('/tweets', function (req, res) {
 	var data = {};
 	var query = {};
 	var sort_query = {tweet_count: -1};
-	console.log(JSON.parse(req.body));
+	console.log(req);
 	var message = JSON.parse(req.body).message.split(' ');
 	if(message[0] == "likes" || message[1] == "likes") sort_query = {likes: 1};
 	if(message[0] == "-likes" || message[1] == "-likes") sort_query = {likes: -1};
