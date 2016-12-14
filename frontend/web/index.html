@@ -46,7 +46,7 @@
 
 			$scope.fetchItems = function () {
 				var data = $scope.textInput;
-				$http.post(window.location.href+'tweets/', data).then(function(response) {
+				$http.post(window.location.href+'tweets/', {message: data}).then(function(response) {
 					// Get data
 					content = angular.fromJson(response.data).results;
 

@@ -37,7 +37,14 @@ app.post('/tweets', function (req, res) {
 	var query = {};
 	var sort_query = {tweet_count: -1};
 	console.log(req.body);
-	var message = req.body.message.split(' ');
+	var message;
+	if(req.body.message && req.body.message.indexOf(" ") != -1){
+		message = req.body.message.split(' ');
+	}
+	else{
+		message = [req.body.message, ""];
+	}
+
 	if(message[0] == "likes" || message[1] == "likes") sort_query = {likes: 1};
 	if(message[0] == "-likes" || message[1] == "-likes") sort_query = {likes: -1};
 	if(message[0] == "like%" || message[1] == "like%") sort_query = {likeRate: 1};
