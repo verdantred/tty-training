@@ -113,7 +113,8 @@ function pollerFunction(end) {
 								end(err);
 								return;
 							}
-							var parsed = JSON.parse(body)
+							var parsed = {}; 
+							if(body) parsed = JSON.parse(body);
 							console.log("Body of the Youtube API response got!");
 							if(parsed && parsed.items){
 								async.forEach(parsed.items,
