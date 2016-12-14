@@ -36,6 +36,7 @@ app.post('/tweets', function (req, res) {
 	var data = {};
 	var query = {};
 	var sort_query = {tweet_count: -1};
+	var d = new Date();
 	console.log(req.body);
 	var message;
 	if(req.body.message && req.body.message.indexOf(" ") != -1){
