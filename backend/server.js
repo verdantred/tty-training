@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const express = require('express');
+var bodyParser = require('body-parser')
 
 var videoSchema = new mongoose.Schema({
     url: String,
@@ -14,6 +15,7 @@ var Video = mongoose.model('Video', videoSchema);
 const PORT = 8082;
 
 const app = express();
+app.use(bodyParser.json());
 
 var dbUrl = 'mongodb://172.17.0.1:93/tweets';
 mongoose.connect(dbUrl);
@@ -34,8 +36,8 @@ app.post('/tweets', function (req, res) {
 	var data = {};
 	var query = {};
 	var sort_query = {tweet_count: -1};
-	console.log(req);
-	var message = JSON.parse(req.body).message.split(' ');
+	console.log(req.body);
+	var message = req.body.message.split(' ');
 	if(message[0] == "likes" || message[1] == "likes") sort_query = {likes: 1};
 	if(message[0] == "-likes" || message[1] == "-likes") sort_query = {likes: -1};
 	if(message[0] == "like%" || message[1] == "like%") sort_query = {likeRate: 1};
