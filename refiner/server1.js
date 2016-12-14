@@ -18,7 +18,8 @@ var videoSchema = new mongoose.Schema({
 	vid: String,
 	likes: {type: Number, default: null},
 	likeRate: {type: Number, default: null},
-	tweet_count: {type: Number, default: 0}
+	tweet_count: {type: Number, default: 0},
+	date: Date
 });
 var Video = mongoose.model('Video', videoSchema);
 
@@ -34,7 +35,7 @@ con.on('error', function(err){
 });
 con.once('open', function() {
 	console.log('We are connected!');
-	mongoose.model('Message', new mongoose.Schema({ message: String, retweet: String, url: String, vid: String, tweet_count: Number, processed: Boolean}), 'messages');
+	mongoose.model('Message', new mongoose.Schema({ message: String, retweet: String, url: String, vid: String, tweet_count: Number, processed: Boolean, date: String}), 'messages');
 	polling.run(); // Let's start polling.
 });
 
@@ -56,7 +57,7 @@ function pollerFunction(end) {
 					var waitFor;
 					if(!vid){
 						console.log("Didn't find the video, inserting it..");
-						waitFor = new Video({url: element.url, message: element.retweet, vid: element.vid, tweet_count: element.tweet_count}).save(function(err, vid){
+						waitFor = new Video({url: element.url, message: element.retweet, vid: element.vid, tweet_count: element.tweet_count, date: new Date(element.date)}).save(function(err, vid){
 						});
 					}
 					else{

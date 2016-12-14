@@ -15,11 +15,10 @@
 		</md-list>
 
 		<md-input-container class="md-block" flex-gt-sm>
-			<label>Item name</label>
+			<label>Query</label>
 			<input ng-model="textInput">
 		</md-input-container>
-		<md-button ng-click="addItem()" class="md-raised md-primary">Add order</md-button>
-		<md-button ng-click="fetchItems()" class="md-raised md-primary">Fetch orders</md-button>
+		<md-button ng-click="fetchItems()" class="md-raised md-primary">Fetch</md-button>
 	</div>
 
 	<!-- Angular Material requires Angular.js Libraries -->
@@ -44,16 +43,10 @@
 			/*
 			 * Documentation https://docs.angularjs.org/api/ng/service/$http
 			 */
-			$scope.addItem = function () {
-				var data = $scope.textInput;
-
-				$http.post(window.location.href+'interface/', data);
-
-				$scope.textInput = "";
-			}
 
 			$scope.fetchItems = function () {
-				$http.get(window.location.href+'tweets/').then(function(response) {
+				var data = $scope.textInput;
+				$http.post(window.location.href+'tweets/', data).then(function(response) {
 					// Get data
 					content = angular.fromJson(response.data).results;
 
@@ -70,6 +63,7 @@
 					// Swap content
 					$scope.orders = newRows;
 				});
+				$scope.textInput = "";
 			}
 		});
 		</script>

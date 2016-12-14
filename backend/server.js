@@ -30,10 +30,23 @@ con.once('open', function() {
 
 // App
 
-app.get('/tweets', function (req, res) {
+app.post('/tweets', function (req, res) {
 	var data = {};
+	var query = {};
+	var sort_query = {tweet_count: -1};
+	var message = req.body.message.split(' ');
+	if(message[0] == "likes" || message[1] == "likes") sort_query = {likes: 1};
+	if(message[0] == "-likes" || message[1] == "-likes") sort_query = {likes: -1};
+	if(message[0] == "like%" || message[1] == "like%") sort_query = {likeRate: 1};
+	if(message[0] == "-like%" || message[1] == "-like%") sort_query = {likeRate: -1};
+	if(message[0] == "tweets" || message[1] == "tweet") sort_query = {tweet_count: 1};
+	if(message[0] == "-tweets" || message[1] == "-tweet") sort_query = {tweet_count: -1};
+	if(message[0] == "hour" || message[1] == "hour") query = {date: { $gt: d.setHours(d.getHours() - 1) }};
+	if(message[0] == "day" || message[1] == "day") query = {date: { $gt: d.setDate(d.getDate() - 1) }};
+	if(message[0] == "week" || message[1] == "week") query = {date: { $gt: d.setDate(d.getDate() - 7) }};
+	if(message[0] == "month" || message[1] == "month") query = {date: { $gt: d.setMonth(d.getMonth() - 1) }};
 	
-	Video.find({}).limit(10).sort({tweet_count: -1}).exec(function(err, results){
+	Video.find(query).limit(10).sort(sort_query).exec(function(err, results){
 		if (err) res.status(500).send('Databse query error: ' + err);
 		console.log("Found videos: " + results);
 		data.results = results;
